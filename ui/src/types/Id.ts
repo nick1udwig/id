@@ -1,6 +1,7 @@
-export interface IdMessage {
-  author: string
-  content: string
+export interface SignedMessage {
+  message: string
+  signature: number[]
+  verified?: boolean
 }
 
 export interface NewMessage {
@@ -13,7 +14,19 @@ export interface SignIdMessage {
   Sign: number[]
 }
 
-// Ids consists of a map of counterparty to an array of messages
-export interface Ids {
-  [counterparty: string]: IdMessage[]
+export interface VerifyIdMessage {
+  Verify: [number[], number[]]
+}
+
+export interface SignResponse {
+  Ok: number[]
+}
+
+export interface VerifyResponse {
+  Ok: boolean
+}
+
+// MessageHistory consists of a list of signed messages
+export interface MessageHistory {
+  messages: SignedMessage[]
 }

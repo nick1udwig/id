@@ -1,10 +1,11 @@
 import { create } from 'zustand'
-import { NewMessage, Ids } from '../types/Id'
+import { SignedMessage, MessageHistory } from '../types/Id'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
 export interface IdStore {
-  ids: Ids
-  addMessage: (msg: NewMessage) => void
+  messageHistory: MessageHistory
+  addSignedMessage: (message: string, signature: number[]) => void
+  updateVerificationStatus: (index: number, verified: boolean) => void
   get: () => IdStore
   set: (partial: IdStore | Partial<IdStore>) => void
 }
@@ -12,17 +13,19 @@ export interface IdStore {
 const useIdStore = create<IdStore>()(
   persist(
     (set, get) => ({
-      ids: { "New Id": [] },
-      addMessage: (msg: NewMessage) => {
-        const { ids } = get()
-        const { id, author, content } = msg
-        if (!ids[id]) {
-          ids[id] = []
-        }
-        ids[id].push({ author, content })
-        set({ ids })
+      messageHistory: { messages: [] },
+      addSignedMessage: (message: string, signature: number[]) => {
+        const { messageHistory } = get()
+        messageHistory.messages.push({ message, signature })
+        set({ messageHistory })
       },
-
+      updateVerificationStatus: (index: number, verified: boolean) => {
+        const { messageHistory } = get()
+        if (index >= 0 && index < messageHistory.messages.length) {
+          messageHistory.messages[index].verified = verified
+          set({ messageHistory })
+        }
+      },
       get,
       set,
     }),
