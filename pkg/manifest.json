@@ -5,10 +5,12 @@
     "on_exit": "Restart",
     "request_networking": false,
     "request_capabilities": [
+        "http-server:distro:sys",
         "sign:sign:sys",
         "vfs:distro:sys"
     ],
     "grant_capabilities": [
+        "http-server:distro:sys",
         "sign:sign:sys",
         "vfs:distro:sys"
     ],

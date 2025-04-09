@@ -10,11 +10,11 @@ path = "../crates/caller-utils"
 
 [dependencies.hyperprocess_macro]
 git = "https://github.com/hyperware-ai/hyperprocess-macro"
-rev = "4e417e1"
+rev = "f29952f"
 
 [dependencies.hyperware_app_common]
 git = "https://github.com/hyperware-ai/hyperprocess-macro"
-rev = "4e417e1"
+rev = "f29952f"
 
 [dependencies.serde]
 features = ["derive"]
