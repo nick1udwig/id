@@ -1,17 +1,9 @@
-//use anyhow::anyhow;
-
-//use crate::hyperware::process::sign;
+use caller_utils::sign::{sign_local_rpc, verify_local_rpc};
 use hyperware_app_common::hyperware_process_lib as hyperware_process_lib;
-use hyperware_process_lib::logging::{init_logging, Level};
-//use hyperware_process_lib::net::{NetAction, NetResponse};
-//use hyperware_process_lib::{get_blob, our, LazyLoadBlob, Request};
-use hyperware_process_lib::Address;
-//
-//use hyperware_app_common::{send, SendResult};
 use hyperware_app_common::{SendResult};
 use hyperprocess_macro::hyperprocess;
-
-use caller_utils::sign::{sign_local_rpc, verify_local_rpc};
+use hyperware_process_lib::logging::{init_logging, Level};
+use hyperware_process_lib::Address;
 
 #[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
 struct IdState {}
