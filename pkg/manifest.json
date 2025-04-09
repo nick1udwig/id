@@ -1,0 +1,17 @@
+[
+  {
+    "process_name": "id",
+    "process_wasm_path": "/id.wasm",
+    "on_exit": "Restart",
+    "request_networking": false,
+    "request_capabilities": [
+        "sign:sign:sys",
+        "vfs:distro:sys"
+    ],
+    "grant_capabilities": [
+        "sign:sign:sys",
+        "vfs:distro:sys"
+    ],
+    "public": false
+  }
+]

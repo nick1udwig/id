@@ -1,0 +1,62 @@
+//use anyhow::anyhow;
+
+//use crate::hyperware::process::sign;
+use hyperware_app_common::hyperware_process_lib as hyperware_process_lib;
+use hyperware_process_lib::logging::{init_logging, Level};
+//use hyperware_process_lib::net::{NetAction, NetResponse};
+//use hyperware_process_lib::{get_blob, our, LazyLoadBlob, Request};
+use hyperware_process_lib::Address;
+//
+//use hyperware_app_common::{send, SendResult};
+use hyperware_app_common::{SendResult};
+use hyperprocess_macro::hyperprocess;
+
+use caller_utils::sign::{sign_local_rpc, verify_local_rpc};
+
+#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+struct IdState {}
+
+fn make_sign_sys() -> Address {
+    Address::new("our", ("sign", "sign", "sys"))
+}
+
+#[hyperprocess(
+    name = "id",
+    ui = Some(HttpBindingConfig::default()),
+    endpoints = vec![
+        Binding::Http {
+            path: "/api",
+            config: HttpBindingConfig::default(),
+        },
+        Binding::Ws {
+            path: "/ws",
+            config: WsBindingConfig::default(),
+        }
+    ],
+    save_config = SaveOptions::Never,
+    wit_world = "id-sys-v0",
+)]
+impl IdState {
+    #[init]
+    async fn init(&mut self) {
+        init_logging(Level::DEBUG, Level::INFO, None, None, None).unwrap();
+    }
+
+    #[http]
+    async fn sign(&mut self, message: Vec<u8>) -> Result<Vec<u8>, String> {
+        let target = make_sign_sys();
+        match sign_local_rpc(&target, message).await {
+            SendResult::Success(r) => r,
+            _ => Err("oops".to_string()),
+        }
+    }
+
+    #[http]
+    async fn verify(&mut self, message: Vec<u8>, signature: Vec<u8>) -> Result<bool, String> {
+        let target = make_sign_sys();
+        match verify_local_rpc(&target, message, signature).await {
+            SendResult::Success(r) => r,
+            _ => Err("oops".to_string()),
+        }
+    }
+}
