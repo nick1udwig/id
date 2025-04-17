@@ -1,6 +1,5 @@
 use caller_utils::sign::{sign_local_rpc, verify_local_rpc};
 use hyperware_app_common::hyperware_process_lib as hyperware_process_lib;
-use hyperware_app_common::{SendResult};
 use hyperprocess_macro::hyperprocess;
 use hyperware_process_lib::logging::{init_logging, Level};
 use hyperware_process_lib::Address;
@@ -38,7 +37,7 @@ impl IdState {
     async fn sign(&mut self, message: Vec<u8>) -> Result<Vec<u8>, String> {
         let target = make_sign_sys();
         match sign_local_rpc(&target, message).await {
-            SendResult::Success(r) => r,
+            Ok(r) => r,
             _ => Err("oops".to_string()),
         }
     }
@@ -47,7 +46,7 @@ impl IdState {
     async fn verify(&mut self, message: Vec<u8>, signature: Vec<u8>) -> Result<bool, String> {
         let target = make_sign_sys();
         match verify_local_rpc(&target, message, signature).await {
-            SendResult::Success(r) => r,
+            Ok(r) => r,
             _ => Err("oops".to_string()),
         }
     }

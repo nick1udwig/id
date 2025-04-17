@@ -1651,7 +1651,7 @@ dependencies = [
 [[package]]
 name = "hyperprocess_macro"
 version = "0.1.0"
-source = "git+https://github.com/hyperware-ai/hyperprocess-macro?rev=f29952f#f29952f01846017ac943a2bcc660717ede9f94e4"
+source = "git+https://github.com/hyperware-ai/hyperprocess-macro?rev=034d339#034d33985fd7b69d897638b1fcd37b1b0fc91ed4"
 dependencies = [
  "anyhow",
  "futures-util",
@@ -1674,7 +1674,7 @@ dependencies = [
 [[package]]
 name = "hyperware_app_common"
 version = "0.1.0"
-source = "git+https://github.com/hyperware-ai/hyperprocess-macro?rev=f29952f#f29952f01846017ac943a2bcc660717ede9f94e4"
+source = "git+https://github.com/hyperware-ai/hyperprocess-macro?rev=034d339#034d33985fd7b69d897638b1fcd37b1b0fc91ed4"
 dependencies = [
  "anyhow",
  "futures-util",
@@ -1686,20 +1686,22 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
+ "thiserror 2.0.12",
  "uuid",
  "wit-bindgen 0.36.0",
 ]
 
 [[package]]
 name = "hyperware_process_lib"
-version = "1.0.6"
-source = "git+https://github.com/hyperware-ai/process_lib?rev=42feacc#42feaccb4b134e453365af436e40445db988a3ee"
+version = "1.1.0"
+source = "git+https://github.com/hyperware-ai/process_lib?rev=b7c9d27#b7c9d2753ad5630920758c8ba13e9844e2307ab5"
 dependencies = [
  "alloy",
  "alloy-primitives",
  "alloy-sol-macro",
  "alloy-sol-types",
  "anyhow",
+ "base64",
  "bincode",
  "color-eyre",
  "http",
