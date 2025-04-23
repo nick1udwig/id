@@ -1,5 +1,4 @@
 use caller_utils::sign::{sign_local_rpc, verify_local_rpc};
-use hyperware_app_common::hyperware_process_lib as hyperware_process_lib;
 use hyperprocess_macro::hyperprocess;
 use hyperware_process_lib::logging::{init_logging, Level};
 use hyperware_process_lib::Address;
