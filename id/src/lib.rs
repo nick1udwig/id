@@ -37,7 +37,7 @@ impl IdState {
         let target = make_sign_sys();
         match sign_local_rpc(&target, message).await {
             Ok(r) => r,
-            _ => Err("oops".to_string()),
+            Err(e) => Err(e.to_string()),
         }
     }
 
@@ -46,7 +46,7 @@ impl IdState {
         let target = make_sign_sys();
         match verify_local_rpc(&target, message, signature).await {
             Ok(r) => r,
-            _ => Err("oops".to_string()),
+            Err(e) => Err(e.to_string()),
         }
     }
 }
