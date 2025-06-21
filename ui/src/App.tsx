@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import HyperwareClientApi from "@hyperware-ai/client-api";
 import "./App.css";
-import { SignIdMessage, VerifyIdMessage, SignResponse, VerifyResponse } from "./types/Id";
 import useIdStore from "./store/id";
+import { sign, verify, ApiError } from "../../target/ui/caller-utils";
 
 const BASE_URL = import.meta.env.BASE_URL;
 if (window.our) window.our.process = BASE_URL?.replace("/", "");
@@ -58,29 +58,20 @@ function App() {
       const encoder = new TextEncoder();
       const messageBytes = encoder.encode(message);
       const messageArray = Array.from(messageBytes);
-      const data = {
-        Sign: messageArray,
-      } as SignIdMessage;
 
-      // Send a message to the node via HTTP request
+      // Send a message to the node via the sign function
       try {
-        const result = await fetch(`${BASE_URL}/api`, {
-          method: "POST",
-          body: JSON.stringify(data),
-        });
+        const signature = await sign(messageArray);
 
-        if (!result.ok) throw new Error("HTTP request failed");
-        
-        // Parse the response to get the signature
-        const responseData = await result.json() as SignResponse;
-        
-        if (responseData.Ok) {
-          // Add the message and its signature to the store
-          addSignedMessage(message, responseData.Ok);
-          setMessage("");
-        }
+        // Add the message and its signature to the store
+        addSignedMessage(message, signature);
+        setMessage("");
       } catch (error) {
-        console.error(error);
+        if (error instanceof ApiError) {
+          console.error("API Error:", error.message, error.details);
+        } else {
+          console.error(error);
+        }
       }
     },
     [message, setMessage, addSignedMessage]
@@ -95,28 +86,19 @@ function App() {
       const encoder = new TextEncoder();
       const messageBytes = encoder.encode(signedMessage.message);
       const messageArray = Array.from(messageBytes);
-      
-      // Create verify message object
-      const data = {
-        Verify: [messageArray, signedMessage.signature],
-      } as VerifyIdMessage;
 
-      // Send a verification request via HTTP
+      // Send a verification request via the verify function
       try {
-        const result = await fetch(`${BASE_URL}/api`, {
-          method: "POST",
-          body: JSON.stringify(data),
-        });
+        const isValid = await verify(messageArray, signedMessage.signature);
 
-        if (!result.ok) throw new Error("HTTP request failed");
-        
-        // Parse the response to get the verification result
-        const responseData = await result.json() as VerifyResponse;
-        
         // Update the verification status in the store
-        updateVerificationStatus(index, responseData.Ok);
+        updateVerificationStatus(index, isValid);
       } catch (error) {
-        console.error(error);
+        if (error instanceof ApiError) {
+          console.error("API Error:", error.message, error.details);
+        } else {
+          console.error(error);
+        }
       }
     },
     [messageHistory, updateVerificationStatus]
@@ -152,14 +134,14 @@ function App() {
                     </span>
                   </div>
                   <div className="verification">
-                    <button 
+                    <button
                       onClick={() => verifyMessage(index)}
                       className="verify-button"
                     >
                       Verify
                     </button>
                     {signedMessage.verified !== undefined && (
-                      <span 
+                      <span
                         className={`verification-result ${signedMessage.verified ? 'verified' : 'failed'}`}
                       >
                         {signedMessage.verified ? '✓' : '✗'}
